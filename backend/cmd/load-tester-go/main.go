@@ -2,20 +2,23 @@ package main
 
 import (
 	"LoadTesterGo/internal/config"
-	"LoadTesterGo/internal/logger"
 	"LoadTesterGo/internal/master"
+	"log"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	// Initialize configuration
-	cfg := config.LoadConfig()
+    // Load .env file
+    err := godotenv.Load()
+    if err != nil {
+        log.Fatal("Error loading .env file")
+    }
 
-	// Initialize logger
-	logger.InitLogger()
+    // Load config and start the load test
+    cfg := config.LoadConfig()
 
-	// Create a new Master
-	m := master.NewMaster(cfg.WorkerCount, cfg.TargetURL)
-
-	// Start the distributed load test
-	m.StartDistributedLoadTest(cfg.RequestsPerWorker)
+    // Initialize Master and start distributed load test
+    m := master.NewMaster(cfg.WorkerCount, cfg.TargetURL)
+    m.StartDistributedLoadTest(cfg.RequestsPerWorker)
 }
