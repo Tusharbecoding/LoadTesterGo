@@ -7,17 +7,19 @@ import (
 )
 
 type Master struct {
-	Workers   []*worker.Worker
-	Results   chan worker.Result
-	TargetURL string
+	Workers          []*worker.Worker
+	Results          chan worker.Result
+	TargetURL        string
+	metricsCollector *metrics.Metrics
 }
 
 func NewMaster(workerCount int, targetURL string) *Master {
 	results := make(chan worker.Result, workerCount*100)
 	m := &Master{
-		Workers:   make([]*worker.Worker, workerCount),
-		Results:   results,
-		TargetURL: targetURL,
+		Workers:          make([]*worker.Worker, workerCount),
+		Results:          results,
+		TargetURL:        targetURL,
+		metricsCollector: metrics.NewMetrics(),
 	}
 
 	for i := 0; i < workerCount; i++ {
@@ -29,7 +31,6 @@ func NewMaster(workerCount int, targetURL string) *Master {
 func (m *Master) StartDistributedLoadTest(requestsPerWorker int) {
 	var wg sync.WaitGroup
 
-	// Start workers to simulate load
 	for _, w := range m.Workers {
 		wg.Add(1)
 		go func(w *worker.Worker) {
@@ -38,20 +39,14 @@ func (m *Master) StartDistributedLoadTest(requestsPerWorker int) {
 		}(w)
 	}
 
-	// Wait for all workers to finish
 	wg.Wait()
 	close(m.Results)
 
-	// Process metrics
-	m.ProcessMetrics(len(m.Workers), requestsPerWorker)
+	for result := range m.Results {
+		m.metricsCollector.ProcessResult(result)
+	}
 }
 
-func (m *Master) ProcessMetrics(workerCount, requestsPerWorker int) {
-	metricsCollector := metrics.NewMetrics()
-
-	for result := range m.Results {
-		metricsCollector.ProcessResult(result)
-	}
-
-	metricsCollector.Report(workerCount, requestsPerWorker)
+func (m *Master) GetMetrics() *metrics.Metrics {
+	return m.metricsCollector
 }
