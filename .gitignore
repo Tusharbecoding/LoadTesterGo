@@ -1,0 +1,81 @@
+# Node.js (Next.js frontend)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.vscode/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build output
+.next/
+out/
+
+# Production
+build/
+dist/
+
+# Dependency directories
+node_modules/
+.pnp/
+.pnp.js
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variable files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Coverage directory used by testing tools
+coverage/
+
+# Go backend
+bin/
+build/
+vendor/
+
+# Go mod files
+go.sum
+go.mod
+
+# Compiled Go binaries and executables
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.out
+*.o
+*.a
+
+# Temporary files created during development
+*.tmp
+*.swp
+*.swo
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-workspace
+
+# Docker
+docker-compose.override.yml
+docker-compose.override.yaml
+*.env
+
+# macOS
+.DS_Store
+
+# Other system files
+Thumbs.db
