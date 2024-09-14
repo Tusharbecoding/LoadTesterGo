@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: load-tester-go
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: load-tester-go
+  template:
+    metadata:
+      labels:
+        app: load-tester-go
+    spec:
+      containers:
+        - name: load-tester-go
+          image: load-tester-go:latest
+          ports:
+            - containerPort: 8080
